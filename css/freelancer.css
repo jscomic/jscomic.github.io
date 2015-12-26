@@ -231,9 +231,6 @@ section.success a.active {
 #comics .portfolio-item .portfolio-link .caption .caption-content h4 {
   margin: 0;
 }
-#comics * {
-  z-index: 2;
-}
 @media (min-width: 767px) {
   #portfolio .portfolio-item {
     margin: 0 0 30px;
@@ -417,4 +414,8 @@ footer .footer-below {
 .portfolio-modal .modal-backdrop {
   opacity: 0;
   display: none;
+  z-index: 0;
+}
+.modal-backdrop.in {
+  z-index: 0;
 }

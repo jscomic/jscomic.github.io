@@ -188,7 +188,7 @@ header {
 
 section {
     padding: 100px 0;
-    
+
     h2 {
     	margin: 0;
     	font-size: 3em;
@@ -263,9 +263,6 @@ section.success {
                 }
             }
         }
-    }
-    * {
-        z-index: 2;
     }
 }
 
@@ -469,5 +466,10 @@ footer {
     .modal-backdrop {
     	opacity: 0;
     	display: none;
+    	z-index: 0;
     }
+}
+
+.modal-backdrop.in {
+	z-index: 0;
 }
