@@ -31,7 +31,7 @@ syncReduxAndRouter(history, store);
 
 render(
     <Provider store={store}>
-        <Router history={history}>
+        <Router>
             <Route path="/" component={ComicApp}>
                 <Route path="comic/:slug" component={ComicModal} />
             </Route>
