@@ -419,3 +419,7 @@ footer .footer-below {
 .modal-backdrop.in {
   z-index: 0;
 }
+.modal-open.modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

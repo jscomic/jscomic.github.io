@@ -1,47 +1,74 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { render } from 'react-dom';
+import { selectComic, fetchComics } from './actions';
 
-let ComicModal = (props) => (
-    <div>
-        <div className="portfolio-modal modal fade in" id="portfolioModal1" role="dialog" aria-hidden="true" style={{zIndex: '9999 !important', display: 'block'}}>
-            <div className="modal-content">
-                <div className="close-modal" data-dismiss="modal">
-                    <div className="lr">
-                        <div className="rl">
+class ComicModal extends React.Component {
+    componentDidMount() {
+        const { dispatch } = this.props;
+        let { slug } = this.props.params;
+        document.body.className = "modal-open";
+        dispatch(fetchComics);
+        dispatch(selectComic(slug));
+        setTimeout(() => {
+            FB.XFBML.parse();    
+        });
+    }
+    componentWillReceiveProps(nextProps) {
+        let { slug } = this.props.params;
+        if (nextProps.comics !== this.props.comics) {
+            const { dispatch } = nextProps;
+            dispatch(selectComic(slug));
+        }
+    }
+    back() {
+        document.body.className = "index";
+        this.context.history.pushState(null, '/');
+    }
+    render() {
+        let { activeComic } = this.props;
+        let currentUrl = window.location.href.split('?')[0];
+        return (
+            <div>
+                <div className="portfolio-modal modal modal-open fade in" id="portfolioModal1" role="dialog" aria-hidden="true" style={{zIndex: '9999 !important', display: 'block'}}>
+                    <div className="modal-content">
+                        <div className="close-modal" onClick={this.back.bind(this)}>
+                            <div className="lr">
+                                <div className="rl">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-8 col-lg-offset-2">
-                            <div className="modal-body">
-                                <h2>Project Title</h2>
-                                <hr className="star-primary" />
-                                <img src="img/portfolio/cabin.png" className="img-responsive img-centered" alt="" />
-                                <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
-                                <ul className="list-inline item-details">
-                                    <li>Client:
-                                        <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                        </strong>
-                                    </li>
-                                    <li>Date:
-                                        <strong><a href="http://startbootstrap.com">April 2014</a>
-                                        </strong>
-                                    </li>
-                                    <li>Service:
-                                        <strong><a href="http://startbootstrap.com">Web Development</a>
-                                        </strong>
-                                    </li>
-                                </ul>
-                                <button type="button" className="btn btn-default" data-dismiss="modal"><i className="fa fa-times"></i> Close</button>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-lg-8 col-lg-offset-2">
+                                    <div className="modal-body">
+                                        <h2>{activeComic.title}</h2>
+                                        <hr className="star-primary" />
+                                        <div>
+                                            <img src={`${window.assetsUrl}/images/${activeComic.image}`} className="img-responsive img-centered" alt="" style={{width: '100%', maxWidth: '640px'}} />
+                                        </div>
+                                        <p>{activeComic.description}</p>
+                                        <div>
+                                            <div className="fb-comments" data-href={currentUrl} data-width="100%" data-numposts="10"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-);
+        );
+    }
+}
 
-module.exports = ComicModal;
+ComicModal.contextTypes = {
+    history: React.PropTypes.object
+};
 
+let mapStateToProps = (state) => {
+    let {activeComic, comics} = state.comics;
+    return {activeComic, comics};
+}
+
+module.exports = connect(mapStateToProps)(ComicModal);
